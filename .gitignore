@@ -15,6 +15,9 @@ appsettings.Development.json
 *.db-shm
 *.db-wal
 
+## Runtime data
+inspecciones.json
+
 ## OS
 .DS_Store
 Thumbs.db

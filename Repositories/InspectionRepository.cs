@@ -1,53 +1,112 @@
-using Microsoft.EntityFrameworkCore;
-using GestionCalidad.Data;
+using System.Text.Json;
 using GestionCalidad.Models;
 
 namespace GestionCalidad.Repositories
 {
     public class InspectionRepository : IInspectionRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly string _filePath;
+        private List<Inspection> _inspections;
+        private int _nextId;
+        private readonly object _lock = new();
 
-        public InspectionRepository(ApplicationDbContext context)
+        public InspectionRepository()
         {
-            _context = context;
+            _filePath = Path.Combine(Directory.GetCurrentDirectory(), "inspecciones.json");
+            _inspections = new List<Inspection>();
+            _nextId = 1;
+            LoadFromFile();
         }
 
-        public async Task<List<Inspection>> GetAllAsync()
+        private void LoadFromFile()
         {
-            return await _context.Inspections.OrderByDescending(i => i.FechaInspeccion).ToListAsync();
-        }
-
-        public async Task<Inspection?> GetByIdAsync(int id)
-        {
-            return await _context.Inspections.FindAsync(id);
-        }
-
-        public async Task CreateAsync(Inspection inspection)
-        {
-            _context.Inspections.Add(inspection);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Inspection inspection)
-        {
-            _context.Inspections.Update(inspection);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var inspection = await _context.Inspections.FindAsync(id);
-            if (inspection != null)
+            if (File.Exists(_filePath))
             {
-                _context.Inspections.Remove(inspection);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    var json = File.ReadAllText(_filePath);
+                    var data = JsonSerializer.Deserialize<List<Inspection>>(json);
+                    if (data != null && data.Count > 0)
+                    {
+                        _inspections = data;
+                        _nextId = _inspections.Max(i => i.Id) + 1;
+                    }
+                }
+                catch
+                {
+                    _inspections = new List<Inspection>();
+                    _nextId = 1;
+                }
             }
         }
 
-        public async Task<bool> ExistsAsync(int id)
+        private void SaveToFile()
         {
-            return await _context.Inspections.AnyAsync(e => e.Id == id);
+            var json = JsonSerializer.Serialize(_inspections, new JsonSerializerOptions { WriteIndented = true });
+            File.WriteAllText(_filePath, json);
+        }
+
+        public Task<List<Inspection>> GetAllAsync()
+        {
+            lock (_lock)
+            {
+                return Task.FromResult(_inspections.OrderByDescending(i => i.FechaInspeccion).ToList());
+            }
+        }
+
+        public Task<Inspection?> GetByIdAsync(int id)
+        {
+            lock (_lock)
+            {
+                return Task.FromResult(_inspections.FirstOrDefault(i => i.Id == id));
+            }
+        }
+
+        public Task CreateAsync(Inspection inspection)
+        {
+            lock (_lock)
+            {
+                inspection.Id = _nextId++;
+                _inspections.Add(inspection);
+                SaveToFile();
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(Inspection inspection)
+        {
+            lock (_lock)
+            {
+                var existing = _inspections.FirstOrDefault(i => i.Id == inspection.Id);
+                if (existing != null)
+                {
+                    existing.Producto = inspection.Producto;
+                    existing.Inspector = inspection.Inspector;
+                    existing.FechaInspeccion = inspection.FechaInspeccion;
+                    existing.Estado = inspection.Estado;
+                    existing.Observaciones = inspection.Observaciones;
+                    SaveToFile();
+                }
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task DeleteAsync(int id)
+        {
+            lock (_lock)
+            {
+                _inspections.RemoveAll(i => i.Id == id);
+                SaveToFile();
+            }
+            return Task.CompletedTask;
+        }
+
+        public Task<bool> ExistsAsync(int id)
+        {
+            lock (_lock)
+            {
+                return Task.FromResult(_inspections.Any(i => i.Id == id));
+            }
         }
     }
 }
