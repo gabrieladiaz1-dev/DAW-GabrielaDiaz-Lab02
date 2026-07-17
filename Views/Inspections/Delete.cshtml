@@ -1,0 +1,111 @@
+@model GestionCalidad.Models.Inspection
+
+@{
+    ViewData["Title"] = "Eliminar Inspección";
+}
+
+<div class="mb-4">
+    <h1 class="h3 fw-bold mb-1" style="color: var(--accent-red);">Eliminar Inspección</h1>
+    <p class="text-muted small mb-0">Esta acción eliminará la inspección de forma permanente</p>
+    <div class="section-divider" style="background: var(--accent-red);"></div>
+</div>
+
+<div class="alert alert-danger border-0 rounded-3 shadow-sm d-flex align-items-center gap-3 py-3 mb-4" role="alert">
+    <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+    <div>
+        <strong>¿Está seguro?</strong><br />
+        <span class="small">Esta acción no se puede deshacer. La inspección será eliminada permanentemente del sistema.</span>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <div class="row g-4">
+                    <div class="col-sm-6">
+                        <div class="detail-label mb-1">Producto</div>
+                        <div class="detail-value">@Html.DisplayFor(m => m.Producto)</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="detail-label mb-1">Inspector</div>
+                        <div class="detail-value">@Html.DisplayFor(m => m.Inspector)</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="detail-label mb-1">Fecha de Inspección</div>
+                        <div class="detail-value">@Model.FechaInspeccion.ToString("dd/MM/yyyy")</div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="detail-label mb-1">Estado</div>
+                        <div class="detail-value">
+                            @if (Model.Estado == "Aprobado")
+                            {
+                                <span class="badge badge-aprobado badge-modern">
+                                    <i class="bi bi-check-circle me-1"></i>Aprobado
+                                </span>
+                            }
+                            else if (Model.Estado == "Rechazado")
+                            {
+                                <span class="badge badge-rechazado badge-modern">
+                                    <i class="bi bi-x-circle me-1"></i>Rechazado
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-pendiente badge-modern">
+                                    <i class="bi bi-hourglass me-1"></i>Pendiente
+                                </span>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <hr />
+                        <div class="detail-label mb-1">Observaciones</div>
+                        <p class="mb-0 mt-2">@Html.DisplayFor(m => m.Observaciones)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-light border-0 p-4">
+                <form asp-action="Delete" method="post" class="d-flex gap-2">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" class="btn btn-red px-4">
+                        <i class="bi bi-trash me-1"></i> Sí, Eliminar
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary px-4 ms-auto">
+                        <i class="bi bi-arrow-left me-1"></i> Cancelar
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm" style="background: var(--accent-red);">
+            <div class="card-body p-4 text-white text-center">
+                <i class="bi bi-trash" style="font-size: 3rem; opacity: 0.8;"></i>
+                <h6 class="fw-bold mt-3 mb-0">Eliminación Permanente</h6>
+                <p class="small opacity-75 mb-0">Esta acción no se puede revertir</p>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm mt-3" style="background: rgba(231,76,60,0.06);">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-2" style="color: var(--accent-red);">¿Qué pasará?</h6>
+                <ul class="list-unstyled small mb-0">
+                    <li class="d-flex gap-2 mb-2">
+                        <i class="bi bi-dash-circle mt-1" style="color: var(--accent-red);"></i>
+                        <span>La inspección será eliminada del sistema.</span>
+                    </li>
+                    <li class="d-flex gap-2 mb-2">
+                        <i class="bi bi-dash-circle mt-1" style="color: var(--accent-red);"></i>
+                        <span>Los datos no podrán ser recuperados.</span>
+                    </li>
+                    <li class="d-flex gap-2">
+                        <i class="bi bi-dash-circle mt-1" style="color: var(--accent-red);"></i>
+                        <span>Las estadísticas del Dashboard se actualizarán.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

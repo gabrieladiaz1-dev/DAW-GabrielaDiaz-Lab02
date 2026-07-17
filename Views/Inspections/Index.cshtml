@@ -1,0 +1,119 @@
+@model IEnumerable<GestionCalidad.Models.Inspection>
+
+@{
+    ViewData["Title"] = "Inspecciones";
+    var searchId = Guid.NewGuid().ToString("N");
+}
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="h3 fw-bold mb-1">Inspecciones</h1>
+        <p class="text-muted small mb-0">Gestione todas las inspecciones de calidad registradas</p>
+    </div>
+    <a asp-action="Create" class="btn btn-gradient-primary shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i> Nueva Inspección
+    </a>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success border-0 rounded-3 shadow-sm d-flex align-items-center gap-2 py-3" role="alert">
+        <i class="bi bi-check-circle-fill fs-5"></i>
+        <span>@TempData["Success"]</span>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="card border-0 shadow-sm">
+        <div class="empty-state">
+            <div class="empty-icon"><i class="bi bi-inbox"></i></div>
+            <h5 class="fw-bold mb-2">No hay inspecciones registradas</h5>
+            <p class="text-muted small mb-3">Comience registrando una nueva inspección de calidad.</p>
+            <a asp-action="Create" class="btn btn-gradient-primary px-4">
+                <i class="bi bi-plus-circle me-1"></i> Crear primera inspección
+            </a>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="inspectionsTable">
+                    <thead>
+                        <tr>
+                            <th class="ps-4" style="width: 50px;">#</th>
+                            <th>Producto</th>
+                            <th>Inspector</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th class="text-center pe-4" style="width: 150px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ var index = 1; }
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 text-muted fw-medium">@index</td>
+                                <td>
+                                    <span class="fw-medium">@Html.DisplayFor(m => item.Producto)</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.75rem; font-weight: 600;">
+                                            @item.Inspector?.Split(' ').Select(s => s[0]).Take(2).Aggregate("", (a, b) => a + b)
+                                        </span>
+                                        <span>@Html.DisplayFor(m => item.Inspector)</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-muted">
+                                        <i class="bi bi-calendar3 me-1"></i>@item.FechaInspeccion.ToString("dd/MM/yyyy")
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (item.Estado == "Aprobado")
+                                    {
+                                        <span class="badge badge-aprobado badge-modern">
+                                            <i class="bi bi-check-circle me-1"></i>Aprobado
+                                        </span>
+                                    }
+                                    else if (item.Estado == "Rechazado")
+                                    {
+                                        <span class="badge badge-rechazado badge-modern">
+                                            <i class="bi bi-x-circle me-1"></i>Rechazado
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-pendiente badge-modern">
+                                            <i class="bi bi-hourglass me-1"></i>Pendiente
+                                        </span>
+                                    }
+                                </td>
+                                <td class="text-center pe-4">
+                                    <div class="btn-group btn-group-modern">
+                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary" title="Detalles">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-warning" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            index++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

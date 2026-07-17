@@ -1,0 +1,304 @@
+@model GestionCalidad.ViewModels.DashboardViewModel
+@inject GestionCalidad.Repositories.IInspectionRepository Repository
+
+@{
+    ViewData["Title"] = "Dashboard";
+    var recentInspections = await Repository.GetAllAsync();
+}
+
+<div class="mb-4">
+    <h1 class="h3 fw-bold mb-1">Dashboard de Calidad</h1>
+    <p class="text-muted small mb-0">Resumen estadístico del rendimiento de las inspecciones</p>
+    <div class="section-divider"></div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card card shadow-sm h-100" style="background: var(--navy);">
+            <div class="card-body p-4 text-white">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="small text-uppercase fw-medium opacity-75 mb-2">Total</div>
+                        <div class="fs-2 fw-bold">@Model.TotalInspecciones</div>
+                        <div class="mt-2 small opacity-75">Inspecciones registradas</div>
+                    </div>
+                    <div class="bg-white bg-opacity-10 rounded-3 p-3">
+                        <i class="bi bi-clipboard-data fs-3"></i>
+                    </div>
+                </div>
+                <div class="progress progress-thin mt-3">
+                    <div class="progress-bar bg-white" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card card shadow-sm h-100" style="background: var(--accent-green);">
+            <div class="card-body p-4 text-white">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="small text-uppercase fw-medium opacity-75 mb-2">Aprobadas</div>
+                        <div class="fs-2 fw-bold">@Model.Aprobadas</div>
+                        <div class="mt-2 small opacity-75">@Model.PorcentajeAprobacion% del total</div>
+                    </div>
+                    <div class="bg-white bg-opacity-10 rounded-3 p-3">
+                        <i class="bi bi-check-circle fs-3"></i>
+                    </div>
+                </div>
+                <div class="progress progress-thin mt-3">
+                    <div class="progress-bar bg-white" style="width: @Model.PorcentajeAprobacion%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card card shadow-sm h-100" style="background: var(--accent-red);">
+            <div class="card-body p-4 text-white">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="small text-uppercase fw-medium opacity-75 mb-2">Rechazadas</div>
+                        <div class="fs-2 fw-bold">@Model.Rechazadas</div>
+                        <div class="mt-2 small opacity-75">@Model.PorcentajeRechazo% del total</div>
+                    </div>
+                    <div class="bg-white bg-opacity-10 rounded-3 p-3">
+                        <i class="bi bi-x-circle fs-3"></i>
+                    </div>
+                </div>
+                <div class="progress progress-thin mt-3">
+                    <div class="progress-bar bg-white" style="width: @Model.PorcentajeRechazo%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card card shadow-sm h-100" style="background: var(--accent-amber);">
+            <div class="card-body p-4 text-white">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="small text-uppercase fw-medium opacity-75 mb-2">Pendientes</div>
+                        <div class="fs-2 fw-bold">@Model.Pendientes</div>
+                        <div class="mt-2 small opacity-75">@Model.PorcentajePendiente% del total</div>
+                    </div>
+                    <div class="bg-white bg-opacity-10 rounded-3 p-3">
+                        <i class="bi bi-hourglass fs-3"></i>
+                    </div>
+                </div>
+                <div class="progress progress-thin mt-3">
+                    <div class="progress-bar bg-white" style="width: @Model.PorcentajePendiente%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4 text-center">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 64px; height: 64px; background: rgba(39,174,96,0.1);">
+                    <i class="bi bi-check-circle fs-3" style="color: var(--accent-green);"></i>
+                </div>
+                <div class="fs-1 fw-bold mb-1" style="color: var(--accent-green);">@Model.PorcentajeAprobacion%</div>
+                <div class="text-muted small text-uppercase fw-medium mb-2">Aprobación</div>
+                <div class="progress" style="height: 6px; border-radius: 3px;">
+                    <div class="progress-bar rounded-pill" style="width: @Model.PorcentajeAprobacion%; background: var(--accent-green);"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4 text-center">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 64px; height: 64px; background: rgba(231,76,60,0.1);">
+                    <i class="bi bi-x-circle fs-3" style="color: var(--accent-red);"></i>
+                </div>
+                <div class="fs-1 fw-bold mb-1" style="color: var(--accent-red);">@Model.PorcentajeRechazo%</div>
+                <div class="text-muted small text-uppercase fw-medium mb-2">Rechazo</div>
+                <div class="progress" style="height: 6px; border-radius: 3px;">
+                    <div class="progress-bar rounded-pill" style="width: @Model.PorcentajeRechazo%; background: var(--accent-red);"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body p-4 text-center">
+                <div class="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 64px; height: 64px; background: rgba(243,156,18,0.1);">
+                    <i class="bi bi-hourglass fs-3" style="color: var(--accent-amber);"></i>
+                </div>
+                <div class="fs-1 fw-bold mb-1" style="color: var(--accent-amber);">@Model.PorcentajePendiente%</div>
+                <div class="text-muted small text-uppercase fw-medium mb-2">Pendiente</div>
+                <div class="progress" style="height: 6px; border-radius: 3px;">
+                    <div class="progress-bar rounded-pill" style="width: @Model.PorcentajePendiente%; background: var(--accent-amber);"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                <h5 class="card-title mb-0 fw-bold fs-6">
+                    <span style="background: rgba(26,35,50,0.08); color: var(--navy);" class="rounded-2 p-2 me-2">
+                        <i class="bi bi-pie-chart"></i>
+                    </span>
+                    Distribución
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="chart-container">
+                    <canvas id="doughnutChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                <h5 class="card-title mb-0 fw-bold fs-6">
+                    <span style="background: rgba(26,35,50,0.08); color: var(--navy);" class="rounded-2 p-2 me-2">
+                        <i class="bi bi-bar-chart"></i>
+                    </span>
+                    Comparación
+                </h5>
+            </div>
+            <div class="card-body p-4 d-flex align-items-center">
+                <div class="chart-container w-100">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                <h5 class="card-title mb-0 fw-bold fs-6">
+                    <span style="background: rgba(26,35,50,0.08); color: var(--navy);" class="rounded-2 p-2 me-2">
+                        <i class="bi bi-clock-history"></i>
+                    </span>
+                    Últimas Inspecciones
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in recentInspections.OrderByDescending(i => i.FechaInspeccion).Take(5))
+                    {
+                        <li class="list-group-item-modern list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-medium small">@item.Producto</div>
+                                <div class="text-muted" style="font-size: 0.75rem;">
+                                    <i class="bi bi-person me-1"></i>@item.Inspector
+                                    <i class="bi bi-calendar ms-2 me-1"></i>@item.FechaInspeccion.ToString("dd/MM/yyyy")
+                                </div>
+                            </div>
+                            <div>
+                                @if (item.Estado == "Aprobado")
+                                {
+                                    <span class="badge badge-aprobado badge-modern">Aprobado</span>
+                                }
+                                else if (item.Estado == "Rechazado")
+                                {
+                                    <span class="badge badge-rechazado badge-modern">Rechazado</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-pendiente badge-modern">Pendiente</span>
+                                }
+                            </div>
+                        </li>
+                    }
+                    @if (!recentInspections.Any())
+                    {
+                        <li class="list-group-item text-center text-muted py-5">
+                            <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                            <span class="small">No hay inspecciones registradas</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+            @if (recentInspections.Any())
+            {
+                <div class="card-footer bg-white border-0 p-3 px-4 text-end">
+                    <a asp-action="Index" class="btn btn-sm btn-outline-navy">
+                        Ver todas <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var chartColors = {
+            green: '#27ae60',
+            red: '#e74c3c',
+            amber: '#f39c12'
+        };
+
+        var doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+        new Chart(doughnutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Aprobadas', 'Rechazadas', 'Pendientes'],
+                datasets: [{
+                    data: [@Model.Aprobadas, @Model.Rechazadas, @Model.Pendientes],
+                    backgroundColor: [chartColors.green, chartColors.red, chartColors.amber],
+                    borderWidth: 0,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { padding: 15, usePointStyle: true, font: { size: 12, weight: '500' } }
+                    }
+                }
+            }
+        });
+
+        var barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Aprobadas', 'Rechazadas', 'Pendientes'],
+                datasets: [{
+                    label: 'Cantidad',
+                    data: [@Model.Aprobadas, @Model.Rechazadas, @Model.Pendientes],
+                    backgroundColor: [
+                        'rgba(39, 174, 96, 0.6)',
+                        'rgba(231, 76, 60, 0.6)',
+                        'rgba(243, 156, 18, 0.6)'
+                    ],
+                    borderColor: [chartColors.green, chartColors.red, chartColors.amber],
+                    borderWidth: 2,
+                    borderRadius: 6,
+                    maxBarThickness: 50
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, font: { size: 11 } },
+                        grid: { color: 'rgba(0,0,0,0.04)' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11, weight: '500' } }
+                    }
+                }
+            }
+        });
+    </script>
+}

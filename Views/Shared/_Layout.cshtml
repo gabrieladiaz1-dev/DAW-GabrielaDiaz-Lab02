@@ -1,0 +1,90 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Control de Calidad</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/GestionCalidad.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-navy shadow mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                <span class="bg-white text-navy rounded-2 p-1 d-flex align-items-center justify-content-center" style="width: 36px; height: 36px; color: #1a2332;">
+                    <i class="bi bi-clipboard-check fs-5"></i>
+                </span>
+                <span>Control de Calidad</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link px-3 rounded-3" asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-house-door me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 rounded-3" asp-controller="Inspections" asp-action="Create">
+                            <i class="bi bi-plus-circle me-1"></i> Nueva
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 rounded-3" asp-controller="Inspections" asp-action="Dashboard">
+                            <i class="bi bi-bar-chart me-1"></i> Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <main role="main" class="pb-4">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="mt-5 pt-5 pb-4">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h6 class="text-white fw-bold mb-3">
+                        <i class="bi bi-clipboard-check me-2"></i>Control de Calidad
+                    </h6>
+                    <p class="small mb-0 opacity-75">
+                        Sistema de gestión de inspecciones de calidad para productos. Registre, monitoree y analice sus inspecciones.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="text-white fw-bold mb-3">Enlaces</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Index" class="text-white-50 text-decoration-none">Inicio</a></li>
+                        <li class="mb-2"><a asp-controller="Inspections" asp-action="Create" class="text-white-50 text-decoration-none">Nueva Inspección</a></li>
+                        <li class="mb-2"><a asp-controller="Inspections" asp-action="Dashboard" class="text-white-50 text-decoration-none">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <h6 class="text-white fw-bold mb-3">Contacto</h6>
+                    <p class="small mb-1 opacity-75"><i class="bi bi-envelope me-1"></i> calidad@@empresa.com</p>
+                    <p class="small mb-0 opacity-75"><i class="bi bi-telephone me-1"></i> +1 (555) 123-4567</p>
+                </div>
+            </div>
+            <hr class="my-4 border-light opacity-25" />
+            <div class="text-center small text-white-50">
+                &copy; @DateTime.Now.Year — Sistema de Control de Calidad.
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
